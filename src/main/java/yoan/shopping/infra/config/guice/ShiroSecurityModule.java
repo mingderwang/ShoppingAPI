@@ -27,6 +27,7 @@ public class ShiroSecurityModule extends ShiroWebModule {
 	public static final String NO_SECURITY = "NO_SECURITY";
 	public static final String SHA256 = "SHA-256";
 	public static final int NB_HASH_ITERATION = 2;
+	public static final String SSL_PORT = "8443";
 	
 	private static final Key<Oauth2AccessTokenAuthenticatingFilter> OAUTH2 = Key.get(Oauth2AccessTokenAuthenticatingFilter.class);
 	
@@ -50,12 +51,8 @@ public class ShiroSecurityModule extends ShiroWebModule {
 		bindRealm().to(UserRealm.class);
 		bindRealm().to(OAuth2AccessTokenRealm.class);
 		
-		//TODO ajouter SSL au début de la filter chain
-		addFilterChain("/rest/auth/authorization", config(NO_SESSION_CREATION, "true"), AUTHC_BASIC);
-		//TODO ajouter SSL au début de la filter chain
-		//addFilterChain("/rest/auth/token", config(NO_SESSION_CREATION, "true"), SSL);
-		//TODO ajouter un filter (custom ou default user) pour le token endpoint
-		addFilterChain("/rest/api/**", config(NO_SESSION_CREATION, "true"), OAUTH2);
+		addFilterChain("/rest/auth/authorization", config(SSL, SSL_PORT), config(NO_SESSION_CREATION, "true"), AUTHC_BASIC);
+		addFilterChain("/rest/api/**", config(SSL, SSL_PORT), config(NO_SESSION_CREATION, "true"), OAUTH2);
 	}
 	
 	private HashedCredentialsMatcher getHashedCredentialsMatcher(String algorithmName) {
