@@ -1,0 +1,22 @@
+mongo_shopping_data:
+  container_name: mongo_shopping_data
+  image: mongo:3.2
+  entrypoint: /bin/bash
+  volumes:
+   - /var/lib/mongodb:/data/db
+mongo_shopping:
+  container_name: mongo_shopping
+  image: mongo:3.2
+  ports:
+   - "27017:27017"
+  volumes_from:  
+   - mongo_shopping_data
+  command: mongod --smallfiles
+
+api_shopping:
+  image: tyoras/shopping_api:0.2.0
+  ports:
+   - "8080:8080"
+   - "8443:8443"
+  links:
+   - mongo_shopping

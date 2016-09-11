@@ -1,0 +1,8 @@
+---
+
+- hosts: ec2hosts
+  gather_facts: true
+  user: ubuntu
+  sudo: yes
+  roles:
+    - shopping_api
